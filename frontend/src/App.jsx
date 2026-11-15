@@ -6,7 +6,7 @@ import {
   Navigate
 } from "react-router-dom";
 
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
