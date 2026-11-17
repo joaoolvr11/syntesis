@@ -26,7 +26,8 @@ function Courses() {
     name: "",
     code: "",
     description: "",
-    mainShift: ""
+    mainShift: "",
+    totalSemesters: ""
   });
 
   const [carregando, setCarregando] = useState(false);
@@ -76,7 +77,8 @@ function Courses() {
       name: curso.name || "",
       code: curso.code || "",
       description: curso.description || "",
-      mainShift: curso.mainShift || ""
+      mainShift: curso.mainShift || "",
+      totalSemesters: String(curso.totalSemesters ?? "")
     });
   
     setMensagem("");
@@ -117,7 +119,8 @@ function Courses() {
             name: "",
             code: "",
             description: "",
-            mainShift: ""
+            mainShift: "",
+            totalSemesters: ""
           });
         }   
 
@@ -149,7 +152,8 @@ function Courses() {
   
       const dadosCurso = {
         ...formulario,
-        mainShift: formulario.mainShift || null
+        mainShift: formulario.mainShift || null,
+        totalSemesters: Number(formulario.totalSemesters)
       };
   
       if (cursoEditando) {
@@ -175,7 +179,8 @@ function Courses() {
         name: "",
         code: "",
         description: "",
-        mainShift: ""
+        mainShift: "",
+        totalSemesters: ""
       });
   
       await carregarCursos();
@@ -317,6 +322,29 @@ function Courses() {
               </div>
             </div>
 
+            <div className="courses-field">
+              <label htmlFor="course-total-semesters">
+                Duração do curso (semestres) *
+              </label>
+
+              <div className="courses-input-wrapper">
+                <Hash size={18} />
+
+                <input
+                  id="course-total-semesters"
+                  name="totalSemesters"
+                  type="number"
+                  min="1"
+                  max="10"
+                  step="1"
+                  placeholder="Ex.: 4"
+                  value={formulario.totalSemesters}
+                  onChange={atualizarCampo}
+                  required
+                />
+              </div>
+            </div>
+
             <div className="courses-field full">
               <label htmlFor="course-description">Descrição</label>
 
@@ -336,7 +364,7 @@ function Courses() {
           </div>
 
           <div className="courses-form-footer">
-            <span>* Campo obrigatório</span>
+            <span>Campo obrigatório</span>
 
             <button
               type="submit"
@@ -355,26 +383,27 @@ function Courses() {
                 </>
               )}
             </button>
-                {cursoEditando && (
-                  <button
-                    type="button"
-                    className="courses-cancel-button"
-                    onClick={() => {
-                      setCursoEditando(null);
-                      setFormulario({
-                        name: "",
-                        code: "",
-                        description: "",
-                        mainShift: ""
-                      });
-                      setMensagem("");
-                      setErro("");
-                    }}
-                  >
-                    <X size={18} />
-                    Cancelar edição
-                  </button>
-                )}
+            {cursoEditando && (
+              <button
+                type="button"
+                className="courses-cancel-button"
+                onClick={() => {
+                  setCursoEditando(null);
+                  setFormulario({
+                    name: "",
+                    code: "",
+                    description: "",
+                    mainShift: "",
+                    totalSemesters: ""
+                  });
+                  setMensagem("");
+                  setErro("");
+                }}
+              >
+                <X size={18} />
+                Cancelar edição
+              </button>
+            )}
           </div>
         </form>
       </div>
