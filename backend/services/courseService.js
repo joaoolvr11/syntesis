@@ -1,8 +1,30 @@
-
 import prisma from "../database/prisma.js";
 
+// Validar duração do curso
+function validarDuracao(totalSemesters) {
+  if (
+    !Number.isInteger(totalSemesters) ||
+    totalSemesters < 1
+  ) {
+    const error = new Error(
+      "A duração do curso deve ser um número inteiro maior ou igual a 1."
+    );
+
+    error.statusCode = 400;
+    throw error;
+  }
+}
+
 export async function createCourse(data) {
-  const { name, code, description, mainShift } = data;
+  const {
+    name,
+    code,
+    description,
+    mainShift,
+    totalSemesters
+  } = data;
+
+  validarDuracao(Number(totalSemesters));
 
   const existingCourse = await prisma.course.findFirst({
     where: {
@@ -27,7 +49,8 @@ export async function createCourse(data) {
       name,
       code: code || null,
       description: description || null,
-      mainShift: mainShift || null
+      mainShift: mainShift || null,
+      totalSemesters: Number(totalSemesters)
     }
   });
 }
@@ -69,7 +92,6 @@ export async function linkStudentToCourse(studentId, courseId) {
   });
 }
 
-
 export async function listCourses() {
   return prisma.course.findMany({
     orderBy: {
@@ -81,6 +103,7 @@ export async function listCourses() {
       code: true,
       description: true,
       mainShift: true,
+      totalSemesters: true,
       createdAt: true
     }
   });
@@ -88,7 +111,13 @@ export async function listCourses() {
 
 // Atualizar curso
 export async function updateCourse(id, data) {
-  const { name, code, description, mainShift } = data;
+  const {
+    name,
+    code,
+    description,
+    mainShift,
+    totalSemesters
+  } = data;
 
   // Verificar se o curso existe
   const course = await prisma.course.findUnique({
@@ -121,17 +150,25 @@ export async function updateCourse(id, data) {
     throw error;
   }
 
+  // Preservar a duração atual caso o campo não seja enviado
+  const novaDuracao =
+    totalSemesters !== undefined
+      ? Number(totalSemesters)
+      : course.totalSemesters;
+
+  validarDuracao(novaDuracao);
+
   return prisma.course.update({
     where: { id },
     data: {
       name,
       code: code || null,
       description: description || null,
-      mainShift: mainShift || null
+      mainShift: mainShift || null,
+      totalSemesters: novaDuracao
     }
   });
 }
-
 
 // Excluir curso
 export async function deleteCourse(id) {
