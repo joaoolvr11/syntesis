@@ -28,7 +28,13 @@ export async function getCourses(req, res) {
 
 export async function registerCourse(req, res) {
   try {
-    const { name, code, description, mainShift } = req.body;
+    const {
+    name,
+    code,
+    description,
+    mainShift,
+    totalSemesters
+  } = req.body; 
 
     if (!name || !name.trim()) {
       return res.status(400).json({
@@ -40,7 +46,7 @@ export async function registerCourse(req, res) {
       name: name.trim(),
       code: code?.trim() || null,
       description: description?.trim() || null,
-      mainShift: mainShift || null
+      totalSemesters: Number(totalSemesters)
     });
 
     return res.status(201).json({
@@ -90,7 +96,13 @@ export async function enrollStudentInCourse(req, res) {
 export async function updateCourse(req, res) {
   try {
     const { id } = req.params;
-    const { name, code, description, mainShift } = req.body;
+    const {
+    name,
+    code,
+    description,
+    mainShift,
+    totalSemesters
+  } = req.body; 
 
     if (!name || !name.trim()) {
       return res.status(400).json({
@@ -102,7 +114,8 @@ export async function updateCourse(req, res) {
       name: name.trim(),
       code: code?.trim() || null,
       description: description?.trim() || null,
-      mainShift: mainShift || null
+      mainShift: mainShift || null,
+      totalSemesters: Number(totalSemesters)
     });
 
     return res.status(200).json({
